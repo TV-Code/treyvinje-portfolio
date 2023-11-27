@@ -2,6 +2,15 @@ import React from 'react';
 import { Container, Grid } from '@mui/material';
 import ProjectCard from './ProjectCard';
 import styled from '@emotion/styled';
+import FlocreateImg1 from '../assets/FlocreateImg-1.webp';
+import FlocreateImg2 from '../assets/FlocreateImg-2.webp';
+import FlocreateImg3 from '../assets/FlocreateImg-3.webp';
+import FlocreateImg4 from '../assets/FlocreateImg-4.webp';
+import FinwiseImg1 from '../assets/FinwiseImg-1.webp';
+import FinwiseImg2 from '../assets/FinwiseImg-2.webp';
+import FinwiseImg3 from '../assets/FinwiseImg-3.webp';
+import FinwiseImg4 from '../assets/FinwiseImg-4.webp';
+
 
 const CustomContainer = styled(Container)(({ theme }) => ({
   paddingLeft: 0,
@@ -27,10 +36,10 @@ function Projects() {
       link: '#',
       githubLink: 'https://github.com/TVlearns/second-mind-test',
       images: [
-        { src: '/FlocreateImg-1.webp', frame: 'desktop' },
-        { src: '/FlocreateImg-2.webp', frame: 'desktop' },
-        { src: '/FlocreateImg-3.webp', frame: 'desktop' },
-        { src: '/FlocreateImg-4.webp', frame: 'desktop' },
+        { src: FlocreateImg1, frame: 'desktop' },
+        { src: FlocreateImg2, frame: 'desktop' },
+        { src: FlocreateImg3, frame: 'desktop' },
+        { src: FlocreateImg4, frame: 'desktop' },
       ],
       type: 'Web App'
     },
@@ -42,10 +51,10 @@ function Projects() {
       link: '#',
       githubLink: 'https://github.com/TVlearns/fin-wise',
       images: [
-        { src: '/FinwiseImg-1.webp', frame: 'desktop' },
-        { src: '/FinwiseImg-2.webp', frame: 'mobile' },
-        { src: '/FinwiseImg-3.webp', frame: 'mobile' },
-        { src: '/FinwiseImg-4.webp', frame: 'mobile' },
+        { src: FinwiseImg1, frame: 'desktop' },
+        { src: FinwiseImg2, frame: 'mobile' },
+        { src: FinwiseImg3, frame: 'mobile' },
+        { src: FinwiseImg4, frame: 'mobile' },
       ],
       type: 'Web App'
     }

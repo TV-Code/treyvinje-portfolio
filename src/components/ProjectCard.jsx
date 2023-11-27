@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import { Typography, Button, Grid, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import MacbookFrame from '../assets/MacbookFrame.png';
+import IphoneFrame from '../assets/IphoneFrame.png';
 
 const SectionDiv = styled('div')(({ theme, isLast }) => ({
   display: 'flex',
@@ -71,7 +73,7 @@ const ImageContainer = styled('div')(({ theme }) => ({
 
 const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1),
-  borderRadius: '5px', // Rounded corners for a modern look
+  borderRadius: '5px',
   padding: '10px 10px',
   fontSize: '1rem',
   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
@@ -279,7 +281,7 @@ function ProjectCard({ project, isLast }) {
               }}
             >
                 <img
-                  src={image.frame === 'desktop' ? '/MacbookFrame.png' : '/IphoneFrame.png'}
+                  src={image.frame === 'desktop' ? MacbookFrame : IphoneFrame}
                   alt={image.frame === 'desktop' ? 'Macbook' : 'Iphone'}
                   style={{ width: '100%', height: '100%' }}
                 />

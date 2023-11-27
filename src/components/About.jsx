@@ -17,6 +17,7 @@ import DjangoIcon from '../assets/DjangoIcon.svg';
 import FlaskIcon from '../assets/FlaskIcon.svg';
 import GithubIcon from '../assets/GithubIcon.svg';
 import TensorFlowIcon from '../assets/TensorFlowIcon.svg';
+import ProfilePhoto from '../assets/ProfilePhoto.webp';
 
 const AboutContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -114,7 +115,7 @@ function About() {
   return (
     <AboutContainer component="section" id="about" sx={{ py: 5 }} ref={ref}>
       <ImageBox>
-        <img src="/ProfilePhoto.webp" alt="Trey Vinje" width="100%"/>
+        <img src={ProfilePhoto} alt="Trey Vinje" width="100%"/>
       </ImageBox>
       <ContentBox>
       <Typography
