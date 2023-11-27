@@ -19,7 +19,7 @@ const SectionDiv = styled('div')(({ theme, isLast }) => ({
   }
 }));
 
-const TextBox = styled('div')(({ theme, textOpacity }) => ({
+const TextBox = styled('div')(({ theme, textOpacity, isLast }) => ({
   position: 'fixed',
   top: '50%',
   left: '5%',
@@ -40,7 +40,7 @@ const TextBox = styled('div')(({ theme, textOpacity }) => ({
     width: 'auto',
     textAlign: 'center',
     padding: '4rem',
-    marginTop: '-750px',
+    marginTop: isLast ? '-500px' : '-500px',
     opacity: textOpacity,
   }
 }));
@@ -67,7 +67,6 @@ const ImageContainer = styled('div')(({ theme }) => ({
   willChange: 'transform, opacity',
   [theme.breakpoints.down('md')]: {
     marginTop: '200px',
-    margineBottom: '-500px',
   }
 }));
 
@@ -99,6 +98,7 @@ function ProjectCard({ project, isLast }) {
           const windowHeight = window.innerHeight;
           const start = sectionRect.top - windowHeight;
           const end = sectionRect.bottom + windowHeight;
+          const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
           const progress = Math.max(0, Math.min(1, -start / (end - start - window.innerHeight)));
     
           const images = imageContainerRef.current.querySelectorAll('img');
@@ -125,12 +125,19 @@ function ProjectCard({ project, isLast }) {
           }
     
           setTextOpacity(Math.min(opacityBasedOnScroll, opacityBasedOnImage));
-    
-          const newImageTransforms = project.images.map((_, index) =>
+
+          if (screenWidth > 900) {
+            const newImageTransforms = project.images.map((_, index) =>
             calculateImageTransform(index, progress, imageContainerRef).transform
           );
           setImageTransforms(newImageTransforms);
-        }
+          } else {
+            const fixedTransforms = project.images.map((image, index) =>
+              calculateFixedTransform(index, image.frame)
+            );
+            setImageTransforms(fixedTransforms);
+          }
+          } 
       };
     
       window.addEventListener('scroll', handleScroll);
@@ -156,6 +163,23 @@ function ProjectCard({ project, isLast }) {
       setImageTransforms(initialTransforms);
     }
   }, [containerSize]);
+
+  const calculateFixedTransform = (index, frameType) => {
+    const isMobileFrame = project.images[index].frame === 'mobile';
+    const verticalMovement = index * 10;
+    const scale = frameType === 'desktop' ? 0.8 : 0.7;
+    let horizontalPosition;
+    let verticalOffset;
+    if (isMobileFrame) {
+      horizontalPosition = index === 1 ? '30%' : index === 2 ? '-30%' : 0;
+      verticalOffset = (index * -225) - 110;
+    } else {
+      horizontalPosition = index === 1 ? '10%' : index === 2 ? '-10%' : 0;
+      verticalOffset = (index * -100) - 200;
+    }
+
+    return `translateX(${horizontalPosition}) translateY(${verticalMovement + verticalOffset}px) scale(${scale})`;
+  };
 
   const calculateImageTransform = (index, progress, imageContainerRef) => {
     const isMobileFrame = project.images[index].frame === 'mobile';
@@ -233,7 +257,7 @@ function ProjectCard({ project, isLast }) {
       </Box>
       <Grid item xs={12} md={4}>
       <TextBoxPlaceholder/>
-      <TextBox textOpacity={textOpacity}>
+      <TextBox textOpacity={textOpacity} isLast={isLast}>
             <Typography fontFamily="Neureal" variant="h3" gutterBottom>
               {project.name}
             </Typography>
