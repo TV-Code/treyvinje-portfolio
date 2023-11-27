@@ -93,59 +93,52 @@ function ProjectCard({ project, isLast }) {
   const [initialSetupComplete, setInitialSetupComplete] = useState(false);
   
   useEffect(() => {
-    let animationFrameId;
-
-    const handleScroll = () => {
-      if (sectionRef.current && imageContainerRef.current) {
-        const sectionRect = sectionRef.current.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const start = sectionRect.top - windowHeight;
-        const end = sectionRect.bottom + windowHeight;
-        const progress = Math.max(0, Math.min(1, -start / (end - start - window.innerHeight)));
-  
-        const images = imageContainerRef.current.querySelectorAll('img');
-        const lastImage = images[images.length - 1];
-        const lastImageRect = lastImage.getBoundingClientRect();
-        
-        const visibleHeight = Math.max(0, lastImageRect.bottom - 0);
-        const totalHeight = lastImageRect.height;
-        const visibleRatio = visibleHeight / totalHeight;
-  
-        let opacityBasedOnScroll = 0;
-        if (sectionRect.top <= windowHeight * 0.9) {
-          const fadeInStart = windowHeight * 0.9;
-          opacityBasedOnScroll = Math.min(1, (fadeInStart - sectionRect.top) / (windowHeight * 0.2));
+      const handleScroll = () => {
+        if (sectionRef.current && imageContainerRef.current) {
+          const sectionRect = sectionRef.current.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          const start = sectionRect.top - windowHeight;
+          const end = sectionRect.bottom + windowHeight;
+          const progress = Math.max(0, Math.min(1, -start / (end - start - window.innerHeight)));
+    
+          const images = imageContainerRef.current.querySelectorAll('img');
+          const lastImage = images[images.length - 1];
+          const lastImageRect = lastImage.getBoundingClientRect();
+          
+          const visibleHeight = Math.max(0, lastImageRect.bottom - 0);
+          const totalHeight = lastImageRect.height;
+          const visibleRatio = visibleHeight / totalHeight;
+    
+          let opacityBasedOnScroll = 0;
+          if (sectionRect.top <= windowHeight * 0.9) {
+            const fadeInStart = windowHeight * 0.9;
+            opacityBasedOnScroll = Math.min(1, (fadeInStart - sectionRect.top) / (windowHeight * 0.2));
+          }
+          
+          if (progress >= 0.75) {
+            opacityBasedOnScroll = 0;
+          }
+    
+          let opacityBasedOnImage = 1;
+          if (visibleRatio < 0.5) {
+            opacityBasedOnImage = visibleRatio * 2;
+          }
+    
+          setTextOpacity(Math.min(opacityBasedOnScroll, opacityBasedOnImage));
+    
+          const newImageTransforms = project.images.map((_, index) =>
+            calculateImageTransform(index, progress, imageContainerRef).transform
+          );
+          setImageTransforms(newImageTransforms);
         }
-        
-        if (progress >= 0.75) {
-          opacityBasedOnScroll = 0;
-        }
-  
-        let opacityBasedOnImage = 1;
-        if (visibleRatio < 0.5) {
-          opacityBasedOnImage = visibleRatio * 2;
-        }
-  
-        setTextOpacity(Math.min(opacityBasedOnScroll, opacityBasedOnImage));
-  
-        const newImageTransforms = project.images.map((_, index) =>
-          calculateImageTransform(index, progress, imageContainerRef).transform
-        );
-        setImageTransforms(newImageTransforms);
-      }
-      
-      // Queue up the next frame
-      animationFrameId = requestAnimationFrame(handleScroll);
-    };
-
-    // Initial call to start the animation
-    animationFrameId = requestAnimationFrame(handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(animationFrameId);
-    };
-}, [project.images]);
+      };
+    
+      window.addEventListener('scroll', handleScroll);
+      handleScroll();
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, [project.images]);
 
   useLayoutEffect(() => {
     if (imageContainerRef.current) {
