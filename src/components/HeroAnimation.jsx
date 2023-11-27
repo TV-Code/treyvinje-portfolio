@@ -201,6 +201,14 @@ export function HeroAnimation({ canvasRef }) {
 
     canvas.addEventListener('click', handleCanvasClick);
 
+    function debounce(func, timeout = 300){
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+      }
+
     const handleResize = () => {
         const canvas = canvasRef.current;
         canvas.width = window.innerWidth;
@@ -208,7 +216,7 @@ export function HeroAnimation({ canvasRef }) {
         initParticles();
     };
     
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', debounce(handleResize));
 
     const initParticles = () => {
         particles.length = 0;
@@ -251,7 +259,7 @@ export function HeroAnimation({ canvasRef }) {
 
     initParticles();
     animate();
-    
+
     return () => {
         const canvas = canvasRef.current;
         cancelAnimationFrame(animationFrameId);

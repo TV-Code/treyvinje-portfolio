@@ -13,6 +13,7 @@
   },
   "homepage": "https://TVlearns.github.io/treyvinje-portfolio",
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
@@ -25,6 +26,7 @@
     "@react-three/fiber": "^8.15.4",
     "aos": "^2.3.4",
     "email-js": "^2.0.2",
+    "emailjs": "^4.0.3",
     "fortawesome": "^0.0.1-security",
     "gh-pages": "^6.1.0",
     "react": "^18.2.0",

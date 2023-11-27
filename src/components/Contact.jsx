@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Grid, TextField, Button, Typography } from '@mui/material';
+import emailjs from '@emailjs/browser';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material/styles';
 
 function Contact() {
   const theme = useTheme();
+  const [statusMessage, setStatusMessage] = useState('');
   function sendEmail(e) {
     e.preventDefault();
-
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
+  
+    emailjs.sendForm('service_0pdc7nc', 'template_uzy5s8n', e.target, 'eHnhJUkRGLwhkwgQc')
       .then((result) => {
           console.log(result.text);
+          setStatusMessage('Message successfully sent.');
+          e.target.reset();
+          setTimeout(() => setStatusMessage(''), 5000);
       }, (error) => {
           console.log(error.text);
+          setStatusMessage('Error sending message. Try again.');
+          e.target.reset();
+          setTimeout(() => setStatusMessage(''), 5000);
       });
   }
+  
 
   return (
     <Box id="contact" sx={{
@@ -41,6 +50,11 @@ function Contact() {
             <Button type="submit" variant="contained" color="primary" endIcon={<SendIcon />} sx={{ height: "60px", borderRadius: "15px", fontFamily: "Lato", fontWeight: "700", fontSize: "1rem"}}>
               Send
             </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom sx={{ fontFamily: "Neureal" }}>
+              {statusMessage}
+            </Typography>
           </Grid>
         </Grid>
       </form>

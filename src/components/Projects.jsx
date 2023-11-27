@@ -15,14 +15,14 @@ import FinwiseImg4 from '../assets/FinwiseImg-4.webp';
 const CustomContainer = styled(Container)(({ theme }) => ({
   paddingLeft: 0,
   paddingRight: 0,
-  marginBottom: 0,
+  marginBottom: '-20rem',
   [theme.breakpoints.up('sm')]: {
     paddingLeft: 0,
     paddingRight: 0,
-    marginBottom: 0,
+    marginBottom: '-20rem',
   },
   [theme.breakpoints.down('md')]: {
-    marginBottom: 0,
+    marginBottom: '-20rem',
   }
 }));
 
