@@ -167,22 +167,29 @@ function ProjectCard({ project, isLast }) {
   const calculateFixedTransform = (index, frameType) => {
     const isMobileFrame = project.images[index].frame === 'mobile';
     const containerWidth = imageContainerRef.current ? imageContainerRef.current.clientWidth : 0;
-    const verticalMovement = index * 10;
     let horizontalPosition, verticalOffset, scale;
+  
     if (isMobileFrame) {
-      scale = Math.min(containerWidth / 800, 1);
-      horizontalPosition = index === 1 ? '20%' : index === 2 ? '-20%' : 0;
+      scale = calculateScale(containerWidth, 700, 0.5, 0.7); // Adjust values as needed
+      horizontalPosition = index === 1 ? '20%' : index === 2 ? '-20%' : '0%';
       verticalOffset = (index * -325) - 50;
     } else {
-      scale = Math.min(containerWidth / 500, 1);
-      horizontalPosition = index === 1 ? '10%' : index === 2 ? '-10%' : 0;
+      scale = calculateScale(containerWidth, 500, 0.7, 0.9); // Adjust values as needed
+      horizontalPosition = index === 1 ? '3%' : index === 2 ? '-3%' : '0%';
       verticalOffset = (index * -40) - 200;
     }
-
-    scale = Math.max(scale, 0.5);
-
+  
+    const verticalMovement = index * 10;
     return `translateX(${horizontalPosition}) translateY(${verticalMovement + verticalOffset}px) scale(${scale})`;
   };
+  
+  const calculateScale = (containerWidth, baseWidth, minScale, maxScale) => {
+    let scale = containerWidth / baseWidth;
+    scale = Math.max(scale, minScale);
+    scale = Math.min(scale, maxScale);
+    return scale;
+  };
+  
 
   const calculateImageTransform = (index, progress, imageContainerRef) => {
     const isMobileFrame = project.images[index].frame === 'mobile';
