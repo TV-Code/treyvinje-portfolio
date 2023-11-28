@@ -166,17 +166,20 @@ function ProjectCard({ project, isLast }) {
 
   const calculateFixedTransform = (index, frameType) => {
     const isMobileFrame = project.images[index].frame === 'mobile';
+    const containerWidth = imageContainerRef.current ? imageContainerRef.current.clientWidth : 0;
     const verticalMovement = index * 10;
-    const scale = frameType === 'desktop' ? 0.8 : 0.7;
-    let horizontalPosition;
-    let verticalOffset;
+    let horizontalPosition, verticalOffset, scale;
     if (isMobileFrame) {
-      horizontalPosition = index === 1 ? '30%' : index === 2 ? '-30%' : 0;
-      verticalOffset = (index * -225) - 110;
+      scale = Math.min(containerWidth / 800, 1);
+      horizontalPosition = index === 1 ? '20%' : index === 2 ? '-20%' : 0;
+      verticalOffset = (index * -325) - 50;
     } else {
+      scale = Math.min(containerWidth / 500, 1);
       horizontalPosition = index === 1 ? '10%' : index === 2 ? '-10%' : 0;
-      verticalOffset = (index * -100) - 200;
+      verticalOffset = (index * -40) - 200;
     }
+
+    scale = Math.max(scale, 0.5);
 
     return `translateX(${horizontalPosition}) translateY(${verticalMovement + verticalOffset}px) scale(${scale})`;
   };
