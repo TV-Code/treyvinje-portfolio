@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import { Typography, Button, Grid, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import MacbookFrame from '../assets/MacbookFrame.png';
-import IphoneFrame from '../assets/IphoneFrame.png';
+import MacbookFrame from '../assets/MacbookFrame.webp';
+import IphoneFrame from '../assets/IphoneFrame.webp';
 
 const SectionDiv = styled('div')(({ theme, isLast }) => ({
   display: 'flex',
@@ -62,6 +62,7 @@ const ImageContainer = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',
+  overflow: 'visible',
   height: 'auto',
   width: '100%',
   willChange: 'transform, opacity',
@@ -83,6 +84,20 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const modalStyle = {
+  position: 'absolute',
+  width: '150%',
+  height: '150%',
+  left: '-50%',
+  top: '-50%',
+  backgroundColor: 'rgba(0, 0, 0, .5)',
+  zIndex: '1000',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+};
+
 function ProjectCard({ project, isLast }) {
   const sectionRef = useRef(null);
   const imageContainerRef = useRef(null);
@@ -90,6 +105,11 @@ function ProjectCard({ project, isLast }) {
   const [containerSize, setContainerSize] = useState({ width: 500, height: 500 });
   const [imageTransforms, setImageTransforms] = useState([]);
   const [initialSetupComplete, setInitialSetupComplete] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [originalTransforms, setOriginalTransforms] = useState({});
+
+
   
   useEffect(() => {
       const handleScroll = () => {
@@ -164,13 +184,85 @@ function ProjectCard({ project, isLast }) {
     }
   }, [containerSize]);
 
+  const handleImageClick = (event) => {
+    if (modalOpen) handleCloseModal();
+    const imageContainerElement = event.target.closest('.image-container');
+  
+    if (imageContainerElement) {
+      const index = parseInt(imageContainerElement.getAttribute('data-index'), 10);
+      if (!isNaN(index)) {
+        const currentTransform = imageTransforms[index] || '';
+  
+        setOriginalTransforms({ ...originalTransforms, [index]: currentTransform });
+  
+        const newTransform = calculateTransformForModal(index, imageContainerElement);
+        const newImageTransforms = [...imageTransforms];
+        newImageTransforms[index] = newTransform;
+        setImageTransforms(newImageTransforms);
+  
+        setSelectedImageIndex(index);
+        setModalOpen(true);
+        document.body.classList.add('no-scroll');
+      }
+    }
+  };
+  
+  
+  
+  const handleCloseModal = () => {
+    setTimeout(() => {
+      if (selectedImageIndex !== null) {
+        const initialTransform = originalTransforms[selectedImageIndex] || '';
+        const newImageTransforms = [...imageTransforms];
+        newImageTransforms[selectedImageIndex] = initialTransform;
+        setImageTransforms(newImageTransforms);
+      }
+    }, 1);
+    setTimeout(() => {
+      setModalOpen(false);
+      document.body.classList.remove('no-scroll');
+      setSelectedImageIndex(null);
+      setOriginalTransforms({});
+    }, 500);
+  };
+
+  const calculateTransformForModal = (index, containerElement) => {
+    if (!(containerElement instanceof Element)) {
+      console.error('containerElement is not a DOM element:', containerElement);
+      return '';
+    }
+  
+    const currentTransform = window.getComputedStyle(containerElement).transform;
+    const matrix = new DOMMatrixReadOnly(currentTransform);
+    const rect = containerElement.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+  
+    let isIphone = rect.height / rect.width > 1;
+  
+    let targetScale;
+    if (isIphone) {
+      targetScale = Math.min(viewportHeight / rect.height * 0.98, 2);
+    } else {
+      targetScale = Math.min(viewportWidth / rect.width * 0.95, 2);
+    }
+  
+    const centeredX = (viewportWidth - rect.width) / 2;
+    const centeredY = (viewportHeight - rect.height) / 2;
+  
+    const translateX = centeredX - (rect.left - matrix.e);
+    const translateY = centeredY - (rect.top - matrix.f);
+  
+    return `matrix(${targetScale * matrix.a}, 0, 0, ${targetScale * matrix.d}, ${translateX}, ${translateY})`;
+  };
+
   const calculateFixedTransform = (index, frameType) => {
     const isMobileFrame = project.images[index].frame === 'mobile';
     const containerWidth = imageContainerRef.current ? imageContainerRef.current.clientWidth : 0;
     let horizontalPosition, verticalOffset, scale;
   
     if (isMobileFrame) {
-      scale = calculateScale(containerWidth, 700, 0.5, 0.7); // Adjust values as needed
+      scale = calculateScale(containerWidth, 1400, 0.5, 0.7); // Adjust values as needed
       horizontalPosition = index === 1 ? '20%' : index === 2 ? '-20%' : '0%';
       verticalOffset = (index * -325) - 50;
     } else {
@@ -293,10 +385,15 @@ function ProjectCard({ project, isLast }) {
       </TextBox>
       </Grid>
         <Grid item xs={12} md={8}>
-        <ImageContainer ref={imageContainerRef}>
+        <ImageContainer ref={imageContainerRef} onClick={handleImageClick}>
+        {modalOpen && (
+          <div style={modalStyle} onClick={handleCloseModal}></div>
+        )}
         {project.images.map((image, index) => {
+          const isSelected = index === selectedImageIndex;
+          console.log(isSelected, index);
           const transform = imageTransforms[index] || '';
-          let zIndex = project.images.length - index;
+          let zIndex =  isSelected ? '1010' : project.images.length - index;
           if (image.frame === 'mobile') {
             zIndex += 10;
           }
@@ -307,12 +404,15 @@ function ProjectCard({ project, isLast }) {
           return (
             <div
               key={index}
+              className={`image-container image-container-${index}`}
+              data-index={index}
               style={{
                 transform,
-                transition: 'transform 0.5s ease-out',
+                transition: isSelected ? 'transform 0.5s ease' : 'none',
                 position: 'relative',
-                transformOrigin: 'center',
-                zIndex,
+                zIndex: isSelected ? 100000 : zIndex,
+                transformOrigin: 'center center',
+                cursor: 'pointer',
               }}
             >
                 <img
@@ -323,7 +423,7 @@ function ProjectCard({ project, isLast }) {
                 <div
                   style={{
                     position: 'absolute',
-                    top: image.frame === 'desktop' ? '-5.5%' : '1.9%',
+                    top: image.frame === 'desktop' ? '-5.5%' : '2.1%',
                     left: image.frame === 'mobile' ? '5%' : undefined,
                     width: image.frame === 'mobile' ? '90%' : '100%',
                     height: image.frame === 'desktop' ? '110%' : '95.2%',
@@ -332,7 +432,7 @@ function ProjectCard({ project, isLast }) {
                     backgroundPosition: 'center',
                     zIndex: '-1',
                     borderRadius: image.frame === 'mobile' ? '10px' : undefined,
-                    transform: image.frame === 'desktop' ? 'scale(0.733)' : 'scale(1))',
+                    transform: image.frame === 'desktop' ? 'scale(0.733)' : 'scale(0.993)',
                   }}
                 />
               </div>
