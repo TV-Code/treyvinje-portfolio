@@ -16,6 +16,9 @@ import ResponsiveIcon from '../assets/ResponsiveIcon.svg';
 import DjangoIcon from '../assets/DjangoIcon.svg';
 import FlaskIcon from '../assets/FlaskIcon.svg';
 import GithubIcon from '../assets/GithubIcon.svg';
+import DockerIcon from '../assets/DockerIcon.svg';
+import PostgreSQLIcon from '../assets/PostgreSQLIcon.svg';
+import NginxIcon from '../assets/NginxIcon.svg';
 import TensorFlowIcon from '../assets/TensorFlowIcon.svg';
 import ProfilePhoto from '../assets/ProfilePhoto.webp';
 
@@ -79,9 +82,15 @@ function About() {
     { label: "Python", iconSrc: PythonIcon },
     { label: "Flask", iconSrc: FlaskIcon },
     { label: "Django", iconSrc: DjangoIcon },
+    { label: "PostgreSQL", iconSrc: PostgreSQLIcon },
     { label: "REST API", iconSrc: RestApiIcon },
-    { label: "GitHub", iconSrc: GithubIcon },
     { label: "TensorFlow & Keras", iconSrc: TensorFlowIcon }
+  ];
+
+  const otherSkills = [
+    { label: "Docker", iconSrc: DockerIcon },
+    { label: "Github", iconSrc: GithubIcon },
+    { label: "Nginx", iconSrc: NginxIcon }
   ];
 
   const theme = useTheme();
@@ -197,7 +206,7 @@ function About() {
         variant="h5"
         sx={{
           opacity: '0',
-          mt: 4,
+          mt: 2,
           mb: 2,
           fontWeight: 'bold',
           animation: inView ? `${fadeInLeft} 0.8s ${theme.transitions.easing.sharp} 0.4s forwards` : 'none',
@@ -212,6 +221,45 @@ function About() {
         sx={{ opacity: '0', animation: inView ? `${fadeInLeft} 0.8s ${theme.transitions.easing.sharp} 0.5s forwards` : 'none' }}
       >
         {backendSkills.map((skill, index) => (
+          <SkillChip
+            index={index}
+            key={skill.label}
+            icon={<img src={skill.iconSrc} alt={skill.label} style={{ width: '24px', height: '24px' }} />}
+            label={skill.label}
+            variant="outlined"
+            sx={{
+              height: '40px',
+              padding: '0 10px',
+              opacity: '0',
+              borderColor: 'rgba(0, 0, 0, 0.23)',
+              color: 'rgba(0, 0, 0, 0.87)',
+              fontSize: '1.1rem',
+              fontWeight: '500',
+              animation: inView ? `${fadeInStaggered} 0.5s ${theme.transitions.easing.sharp} ${0.5 + index * 0.2}s forwards` : 'none',
+            }}
+          />
+        ))}
+      </SkillStack>
+      <Typography
+        fontFamily="Neureal"
+        variant="h5"
+        sx={{
+          opacity: '0',
+          mt: 2,
+          mb: 2,
+          fontWeight: 'bold',
+          animation: inView ? `${fadeInLeft} 0.8s ${theme.transitions.easing.sharp} 0.4s forwards` : 'none',
+        }}
+      >
+        Other Skills
+      </Typography>
+      <SkillStack
+        direction="row"
+        spacing={2}
+        flexWrap="wrap"
+        sx={{ opacity: '0', animation: inView ? `${fadeInLeft} 0.8s ${theme.transitions.easing.sharp} 0.5s forwards` : 'none' }}
+      >
+        {otherSkills.map((skill, index) => (
           <SkillChip
             index={index}
             key={skill.label}

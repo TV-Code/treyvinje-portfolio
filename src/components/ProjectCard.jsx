@@ -7,7 +7,7 @@ import IphoneFrame from '../assets/IphoneFrame.webp';
 const SectionDiv = styled('div')(({ theme, isLast }) => ({
   display: 'flex',
   flexDirection: 'row',
-  width: '100vw',
+  width: '100%',
   height: 'auto',
   position: 'relative',
   marginBottom: isLast ? '-30vh' : '10vh',
@@ -86,7 +86,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const modalStyle = {
   position: 'absolute',
-  width: '150%',
+  width: '165%',
   height: '150%',
   left: '-50%',
   top: '-50%',
@@ -244,7 +244,9 @@ function ProjectCard({ project, isLast }) {
     if (isIphone) {
       targetScale = Math.min(viewportHeight / rect.height * 0.98, 2);
     } else {
-      targetScale = Math.min(viewportWidth / rect.width * 0.95, 2);
+      const scaleBasedOnWidth = viewportWidth / rect.width * 0.95;
+      const scaleBasedOnHeight = viewportHeight / rect.height * 0.95;
+      targetScale = Math.min(Math.min(scaleBasedOnWidth, scaleBasedOnHeight), 2);
     }
   
     const centeredX = (viewportWidth - rect.width) / 2;
@@ -267,7 +269,7 @@ function ProjectCard({ project, isLast }) {
       verticalOffset = (index * -325) - 50;
     } else {
       scale = calculateScale(containerWidth, 500, 0.7, 0.9); // Adjust values as needed
-      horizontalPosition = index === 1 ? '3%' : index === 2 ? '-3%' : '0%';
+      horizontalPosition = index === 1 ? '0%' : index === 2 ? '0%' : '0%';
       verticalOffset = (index * -40) - 200;
     }
   
@@ -391,7 +393,6 @@ function ProjectCard({ project, isLast }) {
         )}
         {project.images.map((image, index) => {
           const isSelected = index === selectedImageIndex;
-          console.log(isSelected, index);
           const transform = imageTransforms[index] || '';
           let zIndex =  isSelected ? '1010' : project.images.length - index;
           if (image.frame === 'mobile') {

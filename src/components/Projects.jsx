@@ -47,8 +47,8 @@ function Projects() {
       number: '02',
       name: 'FinWise',
       description: 'FinWise offers robust financial management capabilities, from transaction tracking and budget planning to user authorization and bulk transaction uploads. The application’s intuitive interface, combined with comprehensive financial tools, facilitates informed decision-making.',
-      techStack: ['React', 'JavaScript', 'CSS', 'Python', 'Django'],
-      link: '#',
+      techStack: ['React', 'JavaScript', 'CSS', 'Python', 'Django', 'PostgreSQL'],
+      link: 'https://www.fin-wise.tech/',
       githubLink: 'https://github.com/TVlearns/fin-wise',
       images: [
         { src: FinwiseImg1, frame: 'desktop' },
