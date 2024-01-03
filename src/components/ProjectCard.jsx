@@ -77,7 +77,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '5px',
   padding: '10px 10px',
   fontSize: '1rem',
-  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, opacity 0.3s ease-in-out',
   '&:hover': {
     transform: 'translateY(-3px)',
     boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)',
@@ -108,8 +108,7 @@ function ProjectCard({ project, isLast }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [originalTransforms, setOriginalTransforms] = useState({});
-
-
+  const [showButtons, setShowButtons] = useState(false);
   
   useEffect(() => {
       const handleScroll = () => {
@@ -183,6 +182,17 @@ function ProjectCard({ project, isLast }) {
       setImageTransforms(initialTransforms);
     }
   }, [containerSize]);
+
+  useEffect(() => {
+    const delay = 300;
+
+    if (textOpacity > 0) {
+      setShowButtons(true);
+    } else {
+      const timer = setTimeout(() => setShowButtons(false), delay);
+      return () => clearTimeout(timer);
+    }
+  }, [textOpacity]);
 
   const handleImageClick = (event) => {
     if (modalOpen) handleCloseModal();
@@ -368,23 +378,31 @@ function ProjectCard({ project, isLast }) {
             <Typography paddingTop="2rem" paddingBottom="2rem" variant="body1" paragraph>
               {project.description}
             </Typography>
-            <Typography variant="body1" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+            <Typography variant="body1" style={{ marginTop: showButtons ? '1rem' : '-5rem' , marginBottom: '1rem'}}>
               <strong>Tech Stack:</strong> {project.techStack.join(", ")}
             </Typography>
-            <StyledButton
-              variant="contained"
-              href={project.link}
-              sx={{ mr: 2 }}
-            >
-              View Project
-            </StyledButton>
-            <StyledButton
-              variant="outlined"
-              href={project.githubLink}
-            >
-              View on GitHub
-            </StyledButton>
-      </TextBox>
+            {showButtons ? (
+              <>
+                {project.link && (
+                  <StyledButton
+                    variant="contained"
+                    href={project.link}
+                  >
+                    View Project
+                  </StyledButton>
+                )}
+                <StyledButton
+                  variant="outlined"
+                  href={project.githubLink}
+                >
+                  View on GitHub
+                </StyledButton>
+              </>
+            ) : (
+              <>
+              </>
+            )}
+          </TextBox>
       </Grid>
         <Grid item xs={12} md={8}>
         <ImageContainer ref={imageContainerRef} onClick={handleImageClick}>

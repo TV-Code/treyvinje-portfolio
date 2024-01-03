@@ -19,6 +19,7 @@ import GithubIcon from '../assets/GithubIcon.svg';
 import DockerIcon from '../assets/DockerIcon.svg';
 import PostgreSQLIcon from '../assets/PostgreSQLIcon.svg';
 import NginxIcon from '../assets/NginxIcon.svg';
+import GitIcon from '../assets/GitIcon.svg';
 import TensorFlowIcon from '../assets/TensorFlowIcon.svg';
 import ProfilePhoto from '../assets/ProfilePhoto.webp';
 
@@ -90,7 +91,8 @@ function About() {
   const otherSkills = [
     { label: "Docker", iconSrc: DockerIcon },
     { label: "Github", iconSrc: GithubIcon },
-    { label: "Nginx", iconSrc: NginxIcon }
+    { label: "Nginx", iconSrc: NginxIcon },
+    { label: "Git", iconSrc: GitIcon }
   ];
 
   const theme = useTheme();

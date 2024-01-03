@@ -33,8 +33,7 @@ function Projects() {
       name: 'FloCreate',
       description: 'FloCreate streamlines daily tasks with a suite of productivity tools, allowing users to efficiently manage notes, tasks, and journal entries. The application leverages category-based organization to enhance user experience and boost overall productivity.',
       techStack: ['React', 'JavaScript', 'CSS', 'Python', 'Flask'],
-      link: '#',
-      githubLink: 'https://github.com/TVlearns/second-mind-test',
+      githubLink: 'https://github.com/TV-Code/flo-create',
       images: [
         { src: FlocreateImg1, frame: 'desktop' },
         { src: FlocreateImg2, frame: 'desktop' },
@@ -49,7 +48,7 @@ function Projects() {
       description: 'FinWise offers robust financial management capabilities, from transaction tracking and budget planning to user authorization and bulk transaction uploads. The application’s intuitive interface, combined with comprehensive financial tools, facilitates informed decision-making.',
       techStack: ['React', 'JavaScript', 'CSS', 'Python', 'Django', 'PostgreSQL'],
       link: 'https://www.fin-wise.tech/',
-      githubLink: 'https://github.com/TVlearns/fin-wise',
+      githubLink: 'https://github.com/TV-Code/fin-wise',
       images: [
         { src: FinwiseImg1, frame: 'desktop' },
         { src: FinwiseImg2, frame: 'mobile' },
