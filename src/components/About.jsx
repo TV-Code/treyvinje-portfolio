@@ -35,6 +35,7 @@ const AboutContainer = styled(Container)(({ theme }) => ({
 }));
 
 const ImageBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
   flexBasis: '40%',
   textAlign: 'center',
   borderRadius: '50%',
@@ -126,7 +127,7 @@ function About() {
   return (
     <AboutContainer component="section" id="about" sx={{ py: 5 }} ref={ref}>
       <ImageBox>
-        <img src={ProfilePhoto} alt="Trey Vinje" width="100%"/>
+        <img src={ProfilePhoto} alt="Trey Vinje" width="100%" />
       </ImageBox>
       <ContentBox>
       <Typography
