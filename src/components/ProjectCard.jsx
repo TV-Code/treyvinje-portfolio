@@ -3,14 +3,16 @@ import { Typography, Button, Grid, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MacbookFrame from '../assets/MacbookFrame.webp';
 import IphoneFrame from '../assets/IphoneFrame.webp';
+import IphoneLandscapeFrame from '../assets/IphoneLandscapeFrame.webp';
+import IpadFrame from '../assets/IpadFrame.webp';
 
-const SectionDiv = styled('div')(({ theme, isLast }) => ({
+const SectionDiv = styled('div')(({ theme, isLast, reduceBottomSpace }) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
   height: 'auto',
   position: 'relative',
-  marginBottom: isLast ? '-30vh' : '10vh',
+  marginBottom: isLast ? '-30vh' : reduceBottomSpace ? '-20vh' : '10vh',
 
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
@@ -98,7 +100,7 @@ const modalStyle = {
   cursor: 'pointer',
 };
 
-function ProjectCard({ project, isLast }) {
+function ProjectCard({ project, isLast, reduceBottomSpace }) {
   const sectionRef = useRef(null);
   const imageContainerRef = useRef(null);
   const [textOpacity, setTextOpacity] = useState(0);
@@ -249,6 +251,7 @@ function ProjectCard({ project, isLast }) {
     const viewportHeight = window.innerHeight;
   
     let isIphone = rect.height / rect.width > 1;
+    
   
     let targetScale;
     if (isIphone) {
@@ -269,16 +272,23 @@ function ProjectCard({ project, isLast }) {
   };
 
   const calculateFixedTransform = (index, frameType) => {
-    const isMobileFrame = project.images[index].frame === 'mobile';
     const containerWidth = imageContainerRef.current ? imageContainerRef.current.clientWidth : 0;
     let horizontalPosition, verticalOffset, scale;
   
-    if (isMobileFrame) {
-      scale = calculateScale(containerWidth, 1400, 0.5, 0.7); // Adjust values as needed
+    if (frameType === 'mobile') {
+      scale = calculateScale(containerWidth, 1400, 0.5, 0.7);
       horizontalPosition = index === 1 ? '20%' : index === 2 ? '-20%' : '0%';
       verticalOffset = (index * -325) - 50;
+    } else if (frameType === 'mobile-landscape') {
+      scale = calculateScale(containerWidth, 1400, 0.5, 0.7);
+      horizontalPosition = index === 1 ? '20%' : index === 2 ? '-20%' : '0%';
+      verticalOffset = (index * -200) - 100;
+    } else if (frameType === 'tablet') {
+      scale = calculateScale(containerWidth, 1200, 0.5, 0.7);
+      horizontalPosition = index === 1 ? '5%' : index === 2 ? '-5%' : '0%';
+      verticalOffset = (index * -200) - 100;
     } else {
-      scale = calculateScale(containerWidth, 500, 0.7, 0.9); // Adjust values as needed
+      scale = calculateScale(containerWidth, 500, 0.7, 0.9);
       horizontalPosition = index === 1 ? '0%' : index === 2 ? '0%' : '0%';
       verticalOffset = (index * -40) - 200;
     }
@@ -296,9 +306,8 @@ function ProjectCard({ project, isLast }) {
   
 
   const calculateImageTransform = (index, progress, imageContainerRef) => {
-    const isMobileFrame = project.images[index].frame === 'mobile';
+    const frameType = project.images[index].frame;
     const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
     const containerWidth = imageContainerRef.current ? imageContainerRef.current.clientWidth : 0;
     let verticalMovement = 0;
   
@@ -314,28 +323,38 @@ function ProjectCard({ project, isLast }) {
         scaleMultiplier = 0.9;
     }
     let scale;
-
-    if (isMobileFrame) {
+  
+    if (frameType === 'mobile') {
       scale = scaleMultiplier - index * 0.1;
       verticalMovement = -(progress - .1) * (50 + index * 60);
+    } else if (frameType === 'mobile-landscape') {
+      scale = (scaleMultiplier - index * 0.05) * 0.8;
+      verticalMovement = -(progress - .1) * (50 + index * 65);
+    } else if (frameType === 'tablet') {
+      scale = Math.max(scaleMultiplier - index * 0.2, 0.9); // Reduce scale for tablet to fit better
+      verticalMovement = -(progress - .1) * (50 + index * 80);
     } else {
       verticalMovement = -(progress - .1) * (50 + index * 40);
       scale = scaleMultiplier - index * 0.1;
     }
-
-    const scaleFactor = isMobileFrame ? Math.min(containerWidth / 700, 1) : Math.min(containerWidth / 400, 1);
+  
+    const scaleFactor = frameType === 'mobile' || frameType === 'mobile-landscape' ? Math.min(containerWidth / 700, 1) :
+                        frameType === 'tablet' ? Math.min(containerWidth / 1000, 1) :
+                        Math.min(containerWidth / 400, 1);
     const minScale = 0.5;
     scale = Math.max(scale * scaleFactor, minScale);
   
     const baseVerticalOffset = .000005;
     let horizontalPosition = 0;
   
-    if (isMobileFrame) {
+    if (frameType === 'mobile') {
       if (screenWidth <= 900) {
         horizontalPosition = index === 1 ? '30%' : index === 2 ? '-30%' : 0;
       } else {
         horizontalPosition = index === 1 ? '40%' : index === 2 ? '-40%' : 0;
       }
+    } else if (frameType === 'tablet') {
+      horizontalPosition = index === 1 ? '10%' : index === 2 ? '-10%' : 0;
     } else {
       horizontalPosition = index === 1 ? '10%' : index === 2 ? '-10%' : 0;
     }
@@ -346,7 +365,7 @@ function ProjectCard({ project, isLast }) {
   };
   
   return (
-    <SectionDiv isLast={isLast} ref={sectionRef}>
+    <SectionDiv isLast={isLast} ref={sectionRef} reduceBottomSpace={reduceBottomSpace}>
       <Box sx={{
         position: 'fixed',
         top: '16px',
@@ -367,7 +386,7 @@ function ProjectCard({ project, isLast }) {
         opacity: textOpacity,
         transition: 'opacity 0.3s'
       }}>
-        {project.type}
+        {project.name === 'Wacintosh' ? <span><span style={{ fontWeight: '600' }}>3</span>D</span> : undefined } Web App
       </Box>
       <Grid item xs={12} md={4}>
       <TextBoxPlaceholder/>
@@ -375,7 +394,7 @@ function ProjectCard({ project, isLast }) {
             <Typography fontFamily="Neureal" variant="h3" gutterBottom>
               {project.name}
             </Typography>
-            <Typography paddingTop="2rem" paddingBottom="2rem" variant="body1" paragraph>
+            <Typography width="115%" paddingTop="2rem" paddingBottom="2rem" variant="body1" paragraph>
               {project.description}
             </Typography>
             <Typography variant="body1" style={{ marginTop: showButtons ? '1rem' : '-5rem' , marginBottom: '1rem'}}>
@@ -406,7 +425,7 @@ function ProjectCard({ project, isLast }) {
       </Grid>
         <Grid item xs={12} md={8}>
         <ImageContainer ref={imageContainerRef} onClick={handleImageClick}>
-        {modalOpen && (
+        {modalOpen && ( 
           <div style={modalStyle} onClick={handleCloseModal}></div>
         )}
         {project.images.map((image, index) => {
@@ -415,6 +434,8 @@ function ProjectCard({ project, isLast }) {
           let zIndex =  isSelected ? '1010' : project.images.length - index;
           if (image.frame === 'mobile') {
             zIndex += 10;
+          } else if (image.frame === 'mobile-landscape') {
+            zIndex += 20;
           }
           if (index === 2) {
             zIndex += 15;
@@ -435,25 +456,39 @@ function ProjectCard({ project, isLast }) {
               }}
             >
                 <img
-                  src={image.frame === 'desktop' ? MacbookFrame : IphoneFrame}
-                  alt={image.frame === 'desktop' ? 'Macbook' : 'Iphone'}
+                  src={
+                    image.frame === 'desktop'
+                      ? MacbookFrame
+                      : image.frame === 'tablet'
+                      ? IpadFrame
+                      : image.frame === 'mobile'
+                      ? IphoneFrame 
+                      : IphoneLandscapeFrame
+                  }
+                  alt={
+                    image.frame === 'desktop'
+                      ? 'Macbook'
+                      : image.frame === 'tablet'
+                      ? 'Ipad'
+                      : 'Iphone'
+                  }
                   style={{ width: '100%', height: '100%' }}
                 />
                 <div
                   style={{
                     position: 'absolute',
-                    top: image.frame === 'desktop' ? '-5.5%' : '2.1%',
-                    left: image.frame === 'mobile' ? '5%' : undefined,
-                    width: image.frame === 'mobile' ? '90%' : '100%',
-                    height: image.frame === 'desktop' ? '110%' : '95.2%',
+                    top: image.frame === 'desktop' ? '-5.5%' : image.frame === 'tablet' ? '-0.3%' : image.frame === 'mobile-landscape' ? '3.4%' : '2.1%',
+                    left: image.frame === 'mobile' ? '5%' : image.frame === 'tablet' ? '-2.4%' : image.frame === 'mobile-landscape' ? '0%' : undefined,
+                    width: image.frame === 'mobile' ? '90%' : image.frame === 'tablet' ? '105%' : '100%',
+                    height: image.frame === 'desktop' ? '110%' : image.frame === 'tablet' ? '100%' : image.frame === 'mobile-landscape' ? '92%' : '95.2%',
                     backgroundImage: `url(${image.src})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     zIndex: '-1',
-                    borderRadius: image.frame === 'mobile' ? '10px' : undefined,
-                    transform: image.frame === 'desktop' ? 'scale(0.733)' : 'scale(0.993)',
+                    borderRadius: image.frame === 'mobile' || image.frame === 'mobile-landscape' ? '30px' : image.frame === 'tablet' ? '5px' : undefined,
+                    transform: image.frame === 'desktop' ? 'scale(0.733)' : image.frame === 'tablet' ? 'scale(0.834)' : image.frame === 'mobile-landscape' ? 'scale(0.957)' : 'scale(0.993)',
                   }}
-                />
+                /> 
               </div>
             );
           })}

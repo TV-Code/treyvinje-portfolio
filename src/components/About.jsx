@@ -8,6 +8,8 @@ import JavascriptIcon from '../assets/JavascriptIcon.svg';
 import ReactIcon from '../assets/ReactIcon.svg';
 import CssIcon from '../assets/CSSIcon.svg';
 import HtmlIcon from '../assets/HtmlIcon.svg';
+import ThreejsIcon from '../assets/ThreeJSIcon.svg';
+import R3fIcon from '../assets/R3FIcon.svg';
 import MUIIcon from '../assets/MUIIcon.svg';
 import PythonIcon from '../assets/PythonIcon.svg';
 import FigmaIcon from '../assets/FigmaIcon.svg';
@@ -75,6 +77,8 @@ function About() {
     { label: "React", iconSrc: ReactIcon },
     { label: "HTML", iconSrc: HtmlIcon },
     { label: "CSS", iconSrc: CssIcon },
+    { label: "ThreeJS", iconSrc: ThreejsIcon },
+    { label: "React Three Fiber", iconSrc: R3fIcon },
     { label: "MUI", iconSrc: MUIIcon },
     { label: "Responsive Design", iconSrc: ResponsiveIcon },
     { label: "Figma", iconSrc: FigmaIcon }
@@ -152,7 +156,7 @@ function About() {
           animation: inView ? `${fadeInLeft} 0.8s ${theme.transitions.easing.sharp} 0.2s forwards` : 'none',
         }}
       >
-        Hello, I'm Trey Vinje—a passionate web developer with a keen interest in psychology and design. My focus lies in creating intuitive and visually appealing digital experiences, with a particular emphasis on user interface and user experience design.
+        Hello, I'm Trey Vinje—an innovative Frontend Engineer with three years of experience creating diverse and engaging digital solutions. My expertise spans from crafting immersive 3D web experiences to developing practical applications like finance trackers and productivity tools. Driven by curiosity and a passion for problem-solving, I blend cutting-edge web technologies with intuitive design to push the boundaries of user experience.
       </Typography>
       <Typography
         variant="body1"
@@ -163,7 +167,7 @@ function About() {
           animation: inView ? `${fadeInLeft} 0.8s ${theme.transitions.easing.sharp} 0.3s forwards` : 'none',
         }}
       >
-        Self-taught and driven by curiosity, I've spent over two years honing my skills in a variety of technologies, including HTML, CSS, JavaScript, React, and Python. I’m continuously exploring the intersection of technology and design to craft impactful digital solutions.
+       My background in psychology enhances my approach to UX/UI, enabling me to create interfaces that are not only visually appealing but also deeply user-centric. Whether reimagining classic interfaces in 3D or building modern web applications for everyday use, I'm committed to continuous learning and creative coding. I'm excited to take on new challenges and collaborate on projects that make a real impact in users' digital lives.
       </Typography>
       <Typography
         fontFamily="Neureal"
