@@ -7,5 +7,4 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
-  assetsInclude: ['**/*.PNG']
 })
